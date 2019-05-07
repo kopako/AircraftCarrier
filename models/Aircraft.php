@@ -3,22 +3,54 @@ abstract class Aircraft
 {
     protected $maxAmmo;
     protected $baseDamage;
-    protected $ammoStorage;
+    protected $ammo;
+    protected $priority;
 
     public function __construct() {
-        $this->ammoStorage=0;
+        $this->ammo=0;
+        $this->priority=false;
     }
 
-    public function __get($fieldName = null)
+    public function __get($fieldName)
     {
         return $this->$fieldName;
     }
 
-    public function __toString() {
+    public function fight()
+    {
+        $usedAmmo = $this->ammo;
+        $this->ammo =0;
+        $damage = $usedAmmo * $this->baseDamage;
+        return $damage;
+    }
+
+    public function refill($var)
+    {
+        while($this->ammo<$this->maxAmmo && $var>0) 
+        {
+            $var -=1;
+            $this->ammo+=1;
+        }
+        return $var;
+    }
+
+    public function getType()
+    {
+        return get_class($this);
+    }
+
+    public function isPriority()
+    {
+        return $this->priority;
+    }
+
+    public function getStatus() {
         $thisClass = get_class($this);
-        $output= "Aircraft type:{$thisClass},max_ammo:{$this->maxAmmo},base_damage: {$this->baseDamage}";
+        $allDamage = $this->ammo*$this->baseDamage;
+        $output= "Type: {$thisClass},\t Ammo: {$this->ammo},\t Base Damage: {$this->baseDamage}, All Damage: {$allDamage},\t ";
         return $output; 
     }
+
 }
 
 ?>
